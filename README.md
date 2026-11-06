@@ -1,36 +1,211 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CVisionAI — AI-Powered CV Screening
+
+**Smart HR Screening for ALAS Academy**
+
+CVisionAI is an AI-powered recruitment assistant designed to simplify and improve the initial candidate screening process. It analyzes resumes against job descriptions, evaluates relevant skills and experience, and provides structured insights to help HR teams identify promising candidates more efficiently.
+
+Built with ALAS Academy in mind, CVisionAI demonstrates how AI can make recruitment workflows faster, more consistent, and more transparent.
+
+---
+
+## The Problem
+
+Recruitment teams often receive hundreds of applications for a single position. Reviewing every CV manually takes considerable time and effort.
+
+This creates several challenges:
+
+- Time-consuming manual resume screening.
+- Difficulty comparing candidates against consistent job requirements.
+- Risk of overlooking qualified applicants.
+- Lack of structured and transparent candidate evaluation.
+- Increased workload for HR professionals.
+
+## Our Solution
+
+CVisionAI helps address these challenges by automating the initial CV screening process.
+
+Recruiters can provide a job description, upload candidate resumes, and receive AI-assisted evaluations based on relevant qualifications, professional experience, technical expertise, and teaching or communication abilities.
+
+Instead of manually reviewing every application from scratch, HR professionals can use structured candidate insights to prioritize their attention and make more informed decisions.
+
+---
+
+## Key Features
+
+- **CV Upload:** Upload candidate resumes in supported PDF and DOCX formats.
+- **Job Description Analysis:** Define the position's requirements and evaluation criteria.
+- **AI-Assisted Screening:** Compare candidate qualifications and experience against job requirements.
+- **Candidate Match Scores:** Generate a match score to summarize candidate suitability.
+- **Detailed Evaluation:** Review individual assessment categories, including:
+  - Technical Expertise
+  - Relevant Experience
+  - Teaching & Mentorship Ability
+  - Culture & Soft Skills
+- **Strengths & Skill Gaps:** Identify relevant qualifications and areas where candidates may lack experience.
+- **Candidate Filtering:** Filter applicants by match score.
+- **Candidate Details:** Explore individual candidate profiles and evaluation explanations.
+- **Interview Workflow:** Use the interview action to demonstrate the next step in the recruitment process.
+
+---
+
+## How It Works
+
+1. **Define the Position:** Enter the job description and required qualifications.
+2. **Upload Resumes:** Add candidate CVs in supported formats.
+3. **Analyze Candidates:** CVisionAI extracts relevant information and evaluates candidates against the position requirements.
+4. **Review Results:** Explore match scores, strengths, skill gaps, and detailed evaluation metrics.
+5. **Prioritize Candidates:** Use the results to support the HR team's interview shortlisting process.
+
+---
+
+## Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Next.js | React-based application framework |
+| React | User interface |
+| TypeScript | Type-safe development |
+| Tailwind CSS | Styling and responsive design |
+| shadcn/ui | UI components |
+| Lucide React | Icons |
+| Framer Motion | Animations |
+| PDF.js | PDF text extraction |
+| Mammoth | DOCX text extraction |
+| AI API | AI-assisted candidate evaluation |
+
+*The exact AI provider and implementation depend on the configured environment.*
+
+---
 
 ## Getting Started
 
-First, run the development server:
+Follow these instructions to run CVisionAI locally.
+
+### Prerequisites
+
+- Node.js (LTS recommended)
+- npm
+- Git
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/cvisionai.git
+```
+
+### 2. Navigate to the project directory
+
+```bash
+cd cvisionai
+```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Configure environment variables
+
+Create a `.env.local` file in the project root.
+
+Example:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+If your project uses another AI provider, configure the corresponding environment variable instead.
+
+**Important:** Never commit `.env.local` or expose API keys in client-side code.
+
+### 5. Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+A simplified overview of the application:
 
-To learn more about Next.js, take a look at the following resources:
+```text
+cvisionai/
+├── app/                  # Next.js application routes
+├── components/           # Reusable UI components
+├── lib/                  # Screening logic and utilities
+├── public/               # Static assets
+├── .env.example          # Environment variable template
+├── .gitignore
+├── package.json
+└── README.md
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+*The actual structure may vary depending on the implementation.*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Example Use Case: ALAS Academy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Position:** Software Development Instructor
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+CVisionAI can evaluate applicants against requirements such as:
+
+- Strong knowledge of JavaScript, React, and Node.js.
+- At least three years of professional software development experience.
+- Previous teaching, mentoring, or student-guidance experience.
+- Ability to explain complex technical concepts.
+- Strong communication skills.
+- Azerbaijani and English language proficiency.
+
+The system provides structured candidate evaluations to help recruiters identify applicants whose qualifications best align with the position.
+
+---
+
+## Responsible AI & Human Oversight
+
+CVisionAI is designed as a decision-support tool, not an autonomous hiring system.
+
+- Match scores are indicators, not guarantees of candidate performance.
+- Evaluations should focus on job-related qualifications and experience.
+- AI-generated assessments should be reviewed by a human recruiter.
+- Sensitive personal information should not influence candidate rankings.
+- Candidate data should be handled securely and responsibly.
+
+The final recruitment decision always belongs to the hiring team.
+
+---
+
+## Project Status
+
+**Hackathon MVP — In Development**
+
+CVisionAI is a prototype demonstrating an AI-assisted approach to recruitment screening. Some features, such as interview scheduling, may be simulated for demonstration purposes.
+
+---
+
+## Future Improvements
+
+- Integration with additional AI models.
+- Advanced semantic matching between job descriptions and resumes.
+- OCR support for scanned documents.
+- Candidate comparison and ranking tools.
+- HR analytics and reporting.
+- Secure candidate management and authentication.
+- Integration with real email and recruitment platforms.
+
+---
+
+## Built For
+
+**ALAS Academy Hackathon**
+
+Developed to explore how artificial intelligence can solve practical challenges in recruitment and human resource management.
+
+---
+
+*CVisionAI — Making candidate screening smarter, faster, and more transparent.*
