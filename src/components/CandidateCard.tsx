@@ -1,16 +1,40 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, ChevronRight, X } from "lucide-react";
+import { BadgeCheck, CalendarCheck, Check, ChevronRight, FolderGit2, X, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { fitStyles, type Candidate } from "@/data/candidates";
+import { fitStyles, type Candidate, type Decision, type VerificationResult } from "@/data/candidates";
 import { cn } from "@/lib/utils";
 
 interface Props {
   candidate: Candidate;
   index: number;
+  rank?: number;
+  showRank?: boolean;
+  decision?: Decision;
+  verification?: VerificationResult;
   onSelect: (c: Candidate) => void;
+}
+
+export function verificationSummary(v?: VerificationResult) {
+  const gh = v?.github;
+  if (!gh || gh.status !== "ok" || !gh.skills) return null;
+  const checkable = gh.skills.filter((s) => s.checkable);
+  return { verified: checkable.filter((s) => s.verified).length, total: checkable.length };
+}
+
+export function DecisionChip({ decision }: { decision?: Decision }) {
+  if (!decision) return null;
+  return decision === "invited" ? (
+    <span className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
+      <CalendarCheck className="h-3 w-3" /> Interview invited
+    </span>
+  ) : (
+    <span className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+      <XCircle className="h-3 w-3" /> Rejected
+    </span>
+  );
 }
 
 export function ScoreRing({ score, hex, size = 72 }: { score: number; hex: string; size?: number }) {
@@ -20,7 +44,7 @@ export function ScoreRing({ score, hex, size = 72 }: { score: number; hex: strin
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e2e8f0" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className="stroke-slate-200" />
         <motion.circle
           cx={size / 2}
           cy={size / 2}
@@ -35,15 +59,16 @@ export function ScoreRing({ score, hex, size = 72 }: { score: number; hex: strin
           transition={{ duration: 1, ease: "easeOut" }}
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-[#0b1f3a]">
+      <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-navy">
         {score}%
       </span>
     </div>
   );
 }
 
-export function CandidateCard({ candidate, index, onSelect }: Props) {
+export function CandidateCard({ candidate, index, rank, showRank, decision, verification, onSelect }: Props) {
   const style = fitStyles[candidate.fit];
+  const vs = verificationSummary(verification);
 
   return (
     <motion.div
@@ -62,18 +87,42 @@ export function CandidateCard({ candidate, index, onSelect }: Props) {
             onSelect(candidate);
           }
         }}
-        className="cursor-pointer p-5 transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        aria-label={`View details for ${candidate.name}`}
+        className="group cursor-pointer p-5 transition-all duration-200 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-900/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
       >
         <div className="flex items-start gap-4">
           <ScoreRing score={candidate.score} hex={style.hex} />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-base font-semibold text-[#0b1f3a]">{candidate.name}</h3>
+              {showRank && rank ? (
+                <span className="rounded-md bg-navy-solid px-1.5 py-0.5 text-[11px] font-bold text-white">
+                  #{rank}
+                </span>
+              ) : null}
+              <h3 className="text-base font-semibold text-navy">{candidate.name}</h3>
               <span className={cn("rounded-full border px-2 py-0.5 text-xs font-semibold", style.bg, style.text)}>
                 {candidate.label}
               </span>
+              <DecisionChip decision={decision} />
+              {vs && (
+                <span
+                  title="Claimed skills with public evidence on GitHub"
+                  className="inline-flex items-center gap-1 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-xs font-semibold text-violet-700"
+                >
+                  <FolderGit2 className="h-3 w-3" />
+                  {vs.verified}/{vs.total} skills verified
+                </span>
+              )}
+              {!vs && candidate.profiles?.github && (
+                <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-surface px-2 py-0.5 text-xs text-slate-500">
+                  <BadgeCheck className="h-3 w-3" /> GitHub linked
+                </span>
+              )}
             </div>
-            <p className="text-sm text-slate-500">{candidate.targetRole}</p>
+            <p className="truncate text-sm text-slate-500">
+              {candidate.targetRole}
+              {candidate.fileName && <span className="text-slate-400"> · {candidate.fileName}</span>}
+            </p>
             <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
               <motion.div
                 className={cn("h-full rounded-full", style.bar)}
@@ -83,7 +132,10 @@ export function CandidateCard({ candidate, index, onSelect }: Props) {
               />
             </div>
           </div>
-          <ChevronRight className="mt-1 hidden h-5 w-5 shrink-0 text-slate-300 sm:block" />
+          <span className="mt-1 hidden shrink-0 items-center gap-0.5 text-xs font-medium text-slate-400 transition-colors group-hover:text-blue-600 sm:flex">
+            <span className="opacity-0 transition-opacity group-hover:opacity-100">View details</span>
+            <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+          </span>
         </div>
 
         <div className="mt-4 space-y-3">
@@ -105,7 +157,10 @@ export function CandidateCard({ candidate, index, onSelect }: Props) {
               Skill gaps
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {candidate.gaps.map((g) => (
+              {candidate.gaps.length === 0 && (
+              <span className="text-xs text-slate-400">No significant gaps found</span>
+            )}
+            {candidate.gaps.map((g) => (
                 <Badge key={g} variant="gap">
                   <X className="h-3 w-3" />
                   {g}
