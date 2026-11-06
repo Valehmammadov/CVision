@@ -125,7 +125,7 @@ If your project uses another AI provider, configure the corresponding environmen
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+
 
 ---
 
